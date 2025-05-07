@@ -1,63 +1,125 @@
-Module 2: Introduction to Python
+Module 2: Python Assignment - Answer Key
 
-Theoretical Assignments:
+Task 1: Python Fundamentals - Answers
 
-1. Explain Python’s Role in Data Science
+1. Sum of first n positive integers
+def sum_n(n):
+    return n * (n + 1) // 2
 
-2. Presentation: Object-Oriented Programming (OOP) Concepts in Python
+2. Count occurrences of a substring
+def count_substring(string, substring):
+    return string.count(substring)
 
-Practical Tasks:
+3. Count occurrences of each word
+def word_count(sentence):
+    from collections import Counter
+    return Counter(sentence.split())
 
-Task 1: Python Fundamentals
+4. Combine two strings and swap first two characters
+def swap_and_combine(a, b):
+    return f"{b[:2]+a[2:]} {a[:2]+b[2:]}"
 
-1. Write a Python program to sum the first n positive integers.
+5. Modify string with 'ing' or 'ly'
+def modify_string(s):
+    if len(s) < 3:
+        return s
+    if s.endswith('ing'):
+        return s + 'ly'
+    return s + 'ing'
 
-2. Write a Python program to count occurrences of a substring in a string.
+6. Replace 'not'...'poor' with 'good'
+def replace_not_poor(s):
+    not_index = s.find('not')
+    poor_index = s.find('poor')
+    if not_index != -1 and poor_index > not_index:
+        return s[:not_index] + 'good' + s[poor_index + 4:]
+    return s
 
-3. Write a Python program to count the occurrences of each word in a given sentence.
+7. GCD of two numbers
+import math
+def gcd(a, b):
+    return math.gcd(a, b)
 
-4. Write a Python program to get a single string from two given strings, separated by a space and swap the first two characters of each string.
+8. Check if a list contains a sublist
+def contains_sublist(main, sub):
+    for i in range(len(main) - len(sub) + 1):
+        if main[i:i+len(sub)] == sub:
+            return True
+    return False
 
-5. Write a Python program to add 'ing' at the end of a given string (length should be at least 3). If the given string already ends with 'ing' then add 'ly' instead. If the string length is less than 3, leave it unchanged.
+9. Second smallest number
+def second_smallest(lst):
+    return sorted(set(lst))[1]
 
-6. Write a Python program to find the first appearance of the substring 'not' and 'poor' from a given string. If 'not' follows 'poor', replace the whole 'not'...'poor' substring with 'good'. Return the resulting string.
+10. Unique values from a list
+def unique_values(lst):
+    return list(set(lst))
 
-7. Program to find Greatest Common Divisor (GCD) of two numbers. Example: GCD of 20 and 28 is 4; GCD of 98 and 56 is 14.
+11. Unzip a list of tuples
+def unzip_list(tuples):
+    return list(zip(*tuples))
 
-8. Write a Python program to check whether a list contains a sublist.
+12. Convert list of tuples to dictionary
+def tuples_to_dict(tuples):
+    return dict(tuples)
 
-9. Write a Python program to find the second smallest number in a list.
+13. Sort dictionary by value
+def sort_dict_by_value(d, reverse=False):
+    return dict(sorted(d.items(), key=lambda item: item[1], reverse=reverse))
 
-10. Write a Python program to get unique values from a list.
+14. Highest 3 values in a dictionary
+def top_3_values(d):
+    return sorted(d.values(), reverse=True)[:3]
 
-11. Write a Python program to unzip a list of tuples into individual lists.
+15. Fibonacci series up to n
+def fibonacci(n):
+    fib = [0, 1]
+    for i in range(2, n):
+        fib.append(fib[-1] + fib[-2])
+    return fib[:n]
 
-12. Write a Python program to convert a list of tuples into a dictionary.
+16. Frequency count in a list
+def frequency_count(lst):
+    from collections import Counter
+    return Counter(lst)
 
-13. Write a Python program to sort a dictionary (ascending/descending) by value.
+17. Sum of odd and even series
+import math
+def series_sum(n):
+    odd_sum = sum((i**2)/math.factorial(i) for i in range(1, n+1, 2))
+    even_sum = sum((i**2)/math.factorial(i) for i in range(2, n+1, 2))
+    return odd_sum, even_sum
 
-14. Write a Python program to find the highest 3 values in a dictionary.
+18. Factorial using recursion
+def factorial(n):
+    if n == 0:
+        return 1
+    return n * factorial(n - 1)
 
-15. Given a number n, write a Python program to make and print the list of Fibonacci series up to n.
-Input: n = 7
-Hint: First 7 numbers in the series
-Expected Output: 0, 1, 1, 2, 3, 5, 8
-
-16. Counting the frequencies in a list using a dictionary in Python.
-Input: [1, 1, 1, 5, 5, 3, 1, 3, 3, 1, 4, 4, 4, 2, 2, 2, 2]
-Expected Output: 1: 5, 2: 4, 3: 3, 4: 3, 5: 2
-
-17. Write a Python program using a function to find the sum of odd and even series.
-Odd series: 1^2 / 1! + 3^2 / 3! + 5^2 / 5! + … up to n
-Even series: 2^2 / 2! + 4^2 / 4! + 6^2 / 6! + … up to n
-
-18. Python Program to Find Factorial of Number Using Recursion
-
-19. Write a Python function that takes a list and returns a new list with unique elements of the first list.
+19. Unique elements from a list
+def unique_list(lst):
+    return list(set(lst))
 
 20. Mini Project: Password Generator
-Problem Statement: Make a program to generate a strong password using input given by the user.
-To generate a password, randomly take some words from the user input and then include numbers, special characters, and capital letters to generate the password.
-Also, ensure that password length is more than 8 characters.
-Note: Include exception handling wherever required.
-Also, make a ‘User’ class and store the details like user ID, name, and password of each user as a tuple.
+import random
+import string
+
+class User:
+    def __init__(self, user_id, name, password):
+        self.details = (user_id, name, password)
+
+def generate_password(user_input):
+    words = user_input.split()
+    if not words:
+        raise ValueError("Input cannot be empty")
+    chosen = random.choice(words).capitalize()
+    chars = string.ascii_letters + string.digits + string.punctuation
+    while True:
+        password = chosen + ''.join(random.choices(chars, k=8))
+        if len(password) > 8:
+            return password
+
+# Example usage
+# password = generate_password("secure input words here")
+# user = User("U01", "Alice", password)
+
