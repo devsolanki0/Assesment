@@ -1,0 +1,52 @@
+Module 1: Introduction to Data Science
+
+Theoretical Assignments
+
+1. Report: Evolution of Data Science
+Objective: Describe how data science has changed over time.
+Content Suggestions:
+- Early foundations in statistics and data analysis
+- The rise of big data and data warehousing
+- Introduction of machine learning and deep learning
+- Impact of cloud computing and distributed systems
+- Role of automation and artificial intelligence in modern data science
+Deliverable: A written report (approximately 2–4 pages)
+
+2. Presentation: Applications of Data Science in Industries
+Objective: Present how data science is applied across sectors.
+Possible Industries:
+- Healthcare: disease prediction, medical imaging, patient data analysis
+- Finance: fraud detection, credit scoring, algorithmic trading
+- Retail/E-commerce: customer segmentation, inventory management, recommendation systems
+Deliverable: A slide presentation with real-world examples
+
+3. Essay: How Generative AI is Transforming Data Science
+Objective: Discuss the impact of tools like ChatGPT and other generative AI models.
+Key Points to Cover:
+- Use of AI-generated data for training and augmentation
+- Automation of data analysis, reporting, and insights
+- Time-saving and productivity benefits for data scientists
+- Limitations and ethical considerations of synthetic data
+Deliverable: An essay (800–1200 words)
+
+Practical Tasks
+
+Task 1: Case Study – Data-Driven Decision Making
+Objective: Analyze how a real company uses data to make decisions
+Suggested Companies: Netflix, Amazon, Uber, Google
+What to Include:
+- The business problem they aimed to solve
+- The type of data collected and analyzed
+- Techniques or models used (e.g., A/B testing, machine learning)
+- Business impact of those decisions
+Deliverables:
+- A written case study report
+- Optional presentation summarizing insights
+
+Task 2: Identifying Real-World Data Science Problems
+Objective: Identify five problems in a chosen industry where data science can offer solutions
+Steps:
+1. Choose an industry (e.g., Healthcare, Finance, E-commerce)
+2. List five specific problems
+3. Suggest a data-driven solution for each
+Deliverable: A document explaining each problem and its potential data science solution
