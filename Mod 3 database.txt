@@ -1,0 +1,240 @@
+MODULE-3: Working with Databases
+Theoretical Assignments:
+1. Compare SQL and NoSQL Databases
+2. Presentation on Normalization vs. Denormalization
+Dataset: https://github.com/TopsCode/Data-Science
+
+SQL and NoSQL Theoretical Comparison
+
+1. Compare SQL and NoSQL Databases
+
+SQL Databases:
+- Relational database management systems (RDBMS)
+- Structured data with predefined schema
+- Tables with rows and columns
+- ACID (Atomicity, Consistency, Isolation, Durability) compliance
+- Vertical scaling (adding more power to existing machine)
+- Examples: MySQL, PostgreSQL, Oracle, SQL Server
+
+NoSQL Databases:
+- Non-relational or distributed databases
+- Schema-less, flexible data models
+- Various data structures (key-value, document, columnar, graph)
+- BASE (Basically Available, Soft state, Eventually consistent) model
+- Horizontal scaling (adding more machines)
+- Examples: MongoDB, Cassandra, Redis, Neo4j
+
+2. Presentation on Normalization vs. Denormalization
+
+Normalization:
+- Process of organizing data to minimize redundancy
+- Divides large tables into smaller, related tables
+- Advantages: reduces data duplication, improves data integrity
+- Disadvantages: more complex queries, potential performance issues
+
+Denormalization:
+- Combining tables to optimize read performance
+- Introduces some redundancy to improve query speed
+- Advantages: faster reads, simpler queries
+- Disadvantages: more storage needed, potential update anomalies
+
+SQL Practical Tasks
+
+-- 1. Customers from 'NewYork' or grade <= 100
+SELECT customer_id, cust_name, city, grade, salesman_id
+FROM customers
+WHERE city = 'NewYork' OR grade <= 100;
+
+-- 2. Customers in 'New York' with grade > 100
+SELECT customer_id, cust_name, city, grade, salesman_id
+FROM customers
+WHERE city = 'New York' AND grade > 100;
+
+-- 3. Orders exceeding 50% of 6000 target
+SELECT ord_no, purch_amt,
+       (purch_amt/6000)*100 AS achieved_percentage,
+       100 - (purch_amt/6000)*100 AS unachieved_percentage
+FROM orders
+WHERE purch_amt > 3000;
+
+-- 4. Total purchase amount of all orders
+SELECT SUM(purch_amt) AS total_purchase_amount
+FROM orders;
+
+-- 5. Highest purchase amount by each customer
+SELECT customer_id, MAX(purch_amt) AS max_purchase_amount
+FROM orders
+GROUP BY customer_id;
+
+-- 6. Average product price
+SELECT AVG(price) AS average_product_price
+FROM products;
+
+-- 7. Employees in 'Toronto' department
+SELECT e.first_name, e.last_name, e.employee_id, e.job_id
+FROM employees e
+JOIN departments d ON e.department_id = d.department_id
+JOIN locations l ON d.location_id = l.location_id
+WHERE l.city = 'Toronto';
+
+-- 8. Employees earning less than MK_MAN (excluding MK_MAN)
+SELECT e.employee_id, e.first_name, e.last_name, e.job_id
+FROM employees e
+WHERE e.salary < (SELECT salary FROM employees WHERE job_id = 'MK_MAN')
+AND e.job_id != 'MK_MAN';
+
+-- 9. Employees in department 80 or 40
+SELECT e.first_name, e.last_name, e.department_id, d.department_name
+FROM employees e
+JOIN departments d ON e.department_id = d.department_id
+WHERE e.department_id IN (80, 40);
+
+-- 10. Department avg salary and commission employees count
+SELECT d.department_name, 
+       AVG(e.salary) AS average_salary,
+       COUNT(CASE WHEN e.commission_pct IS NOT NULL THEN 1 END) AS employees_with_commission
+FROM employees e
+JOIN departments d ON e.department_id = d.department_id
+GROUP BY d.department_name;
+
+-- 11. Employees with same job as employee 169
+SELECT e.first_name, e.last_name, e.department_id, e.job_id
+FROM employees e
+WHERE e.job_id = (SELECT job_id FROM employees WHERE employee_id = 169)
+AND e.employee_id != 169;
+
+-- 12. Employees earning more than average salary
+SELECT employee_id, first_name, last_name
+FROM employees
+WHERE salary > (SELECT AVG(salary) FROM employees);
+
+-- 13. Employees in Finance department
+SELECT e.department_id, e.first_name, e.job_id, d.department_name
+FROM employees e
+JOIN departments d ON e.department_id = d.department_id
+WHERE d.department_name = 'Finance';
+
+-- 14. Employees earning less than employee 182
+SELECT first_name, last_name, salary
+FROM employees
+WHERE salary < (SELECT salary FROM employees WHERE employee_id = 182);
+
+-- 15. Stored procedure: CountEmployeesByDept
+DELIMITER //
+CREATE PROCEDURE CountEmployeesByDept()
+BEGIN
+    SELECT d.department_name, COUNT(e.employee_id) AS employee_count
+    FROM departments d
+    LEFT JOIN employees e ON d.department_id = e.department_id
+    GROUP BY d.department_name;
+END //
+DELIMITER ;
+
+-- 16. Stored procedure: AddNewEmployee
+DELIMITER //
+CREATE PROCEDURE AddNewEmployee(
+    IN p_first_name VARCHAR(50),
+    IN p_last_name VARCHAR(50),
+    IN p_email VARCHAR(100),
+    IN p_phone_number VARCHAR(20),
+    IN p_hire_date DATE,
+    IN p_job_id VARCHAR(10),
+    IN p_salary DECIMAL(10,2),
+    IN p_commission_pct DECIMAL(4,2),
+    IN p_manager_id INT,
+    IN p_department_id INT
+)
+BEGIN
+    INSERT INTO employees (first_name, last_name, email, phone_number, 
+                          hire_date, job_id, salary, commission_pct, 
+                          manager_id, department_id)
+    VALUES (p_first_name, p_last_name, p_email, p_phone_number,
+            p_hire_date, p_job_id, p_salary, p_commission_pct,
+            p_manager_id, p_department_id);
+END //
+DELIMITER ;
+
+-- 17. Stored procedure: DeleteEmployeesByDept
+DELIMITER //
+CREATE PROCEDURE DeleteEmployeesByDept(IN p_department_id INT)
+BEGIN
+    DELETE FROM employees WHERE department_id = p_department_id;
+END //
+DELIMITER ;
+
+-- 18. Stored procedure: GetTopPaidEmployees
+DELIMITER //
+CREATE PROCEDURE GetTopPaidEmployees()
+BEGIN
+    SELECT d.department_name, e.first_name, e.last_name, e.salary
+    FROM employees e
+    JOIN departments d ON e.department_id = d.department_id
+    WHERE (e.department_id, e.salary) IN (
+        SELECT department_id, MAX(salary)
+        FROM employees
+        GROUP BY department_id
+    );
+END //
+DELIMITER ;
+
+-- 19. Stored procedure: PromoteEmployee
+DELIMITER //
+CREATE PROCEDURE PromoteEmployee(
+    IN p_employee_id INT,
+    IN p_new_job_id VARCHAR(10),
+    IN p_salary_increase DECIMAL(10,2)
+)
+BEGIN
+    UPDATE employees
+    SET job_id = p_new_job_id,
+        salary = salary + p_salary_increase
+    WHERE employee_id = p_employee_id;
+END //
+DELIMITER ;
+
+-- 20. Stored procedure: AssignManagerToDepartment
+DELIMITER //
+CREATE PROCEDURE AssignManagerToDepartment(
+    IN p_department_id INT,
+    IN p_manager_id INT
+)
+BEGIN
+    UPDATE departments
+    SET manager_id = p_manager_id
+    WHERE department_id = p_department_id;
+    
+    UPDATE employees
+    SET manager_id = p_manager_id
+    WHERE department_id = p_department_id
+    AND employee_id != p_manager_id;
+END //
+DELIMITER ;
+
+NoSQL Practical Tasks (MongoDB)
+
+// 1. Retrieve all employee records
+db.employees.find();
+
+// 2. Find employees who work in the IT department
+db.employees.find({ department: "IT" });
+
+// 3. Find employees who have a salary greater than 70,000
+db.employees.find({ salary: { $gt: 70000 } });
+
+// 4. Find employees who joined after 2018
+db.employees.find({ join_date: { $gt: new Date("2018-12-31") } });
+
+// 5. Find employees between the ages of 30 and 40
+db.employees.find({ age: { $gte: 30, $lte: 40 } });
+
+// 6. Increase the salary of all employees in the Finance department by 5%
+db.employees.updateMany(
+  { department: "Finance" },
+  { $mul: { salary: 1.05 } }
+);
+
+// 7. Delete employees who joined before 2010
+db.employees.deleteMany({ join_date: { $lt: new Date("2010-01-01") } });
+
+// 8. Find the highest-paid employee
+db.employees.find().sort({ salary: -1 }).limit(1);
