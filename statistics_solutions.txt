@@ -1,0 +1,67 @@
+
+Q1. Mean, Median, Mode of Car Rental Durations
+- Mean = 3.5
+- Median = 3
+- Mode = 2
+
+Q2. Range, Variance, Standard Deviation of Delivery Times
+- Range = 6
+- Mean = 5.9
+- Variance = 2.0
+- Standard Deviation = 1.41
+
+Q3. Mean and Range of Monthly Revenues
+- Mean = 132.5
+- Range = 45
+
+Q4. Fuel Efficiency Stats per Model
+| Model | Mean  | Range | Variance |
+|-------|-------|-------|----------|
+| A     | 30.6  | 5     | 2.24     |
+| B     | 25.9  | 5     | 2.29     |
+| C     | 22.9  | 5     | 2.49     |
+| D     | 18.8  | 4     | 1.16     |
+| E     | 34.6  | 4     | 1.36     |
+
+Q5. Most Common Defect Type
+- Answer: Type E
+
+Q6. Skewness & Kurtosis (Satisfaction Ratings)
+- Mean = 3.8
+- Skewness = -0.32
+- Kurtosis = -0.76
+
+Q7. Boxplot Stats and Percentiles (Weights)
+- Q1 = 190
+- Q2 (Median) = 285
+- Q3 = 375
+- P15 = 144
+- P50 = 285
+- P85 = 404
+
+Q8. Correlation Coefficient (r)
+- r ≈ 0.998
+
+Q9. Binomial Probability (n=10, p=0.25, X ≥ 8)
+- Result: 0.003
+
+Q10. Normal Distribution (μ=1000, σ=100)
+- P(900 < X < 1100) = 0.6826
+
+Q11. 95% Confidence Interval (n=100, x̄ = 170, σ = 10)
+- CI = (168.04, 171.96)
+
+Q12. Hypothesis Testing (μ = 500, x̄ = 520, n=25, σ = 40)
+- z = 2.5
+- p-value ≈ 0.021
+- Conclusion: Reject H₀
+
+Q13. Hypothesis Setup for Performance
+- Null Hypothesis (H₀): μ₁ = μ₂
+- Alt. Hypothesis (H₁): μ₁ ≠ μ₂
+
+Q14. Confidence Interval for Population Proportion
+- CI = (0.6164, 0.6836)
+
+Q15. Poisson Distribution (λ = 2, X = 3)
+- Result: 0.18
