@@ -1,0 +1,66 @@
+
+# Unsupervised Learning: Anomaly Detection in Engines
+# Dataset: NASA Turbofan Jet Engine Dataset
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+from sklearn.cluster import DBSCAN
+from sklearn.ensemble import IsolationForest
+
+# 1. Load Dataset
+# Update path if needed after extracting zip
+data = pd.read_csv("train_FD001.txt", sep=" ", header=None)
+data = data.dropna(axis=1)
+
+# Column names (as per NASA dataset documentation)
+columns = ["unit_id", "cycle"] + [f"sensor_{i}" for i in range(1, data.shape[1]-1)]
+data.columns = columns
+
+# 2. Basic Understanding
+print(data.head())
+print(data.describe())
+
+# 3. Preprocessing
+features = data.drop(["unit_id", "cycle"], axis=1)
+scaler = StandardScaler()
+scaled_features = scaler.fit_transform(features)
+
+# 4. Aggregate by cycle (mean per engine)
+agg_data = data.groupby("unit_id").mean().drop("cycle", axis=1)
+scaled_agg = scaler.fit_transform(agg_data)
+
+# 5. PCA for dimensionality reduction
+pca = PCA(n_components=2)
+pca_data = pca.fit_transform(scaled_agg)
+
+# 6. DBSCAN for anomaly detection
+dbscan = DBSCAN(eps=1.5, min_samples=5)
+clusters = dbscan.fit_predict(pca_data)
+
+# 7. Visualization
+plt.figure(figsize=(8,6))
+plt.scatter(pca_data[:,0], pca_data[:,1], c=clusters, cmap='viridis')
+plt.xlabel("PCA 1")
+plt.ylabel("PCA 2")
+plt.title("DBSCAN Clustering of Engines")
+plt.show()
+
+# 8. Isolation Forest
+iso = IsolationForest(contamination=0.05, random_state=42)
+iso_labels = iso.fit_predict(scaled_agg)
+
+# 9. Label anomalies
+agg_data["DBSCAN_Label"] = clusters
+agg_data["IsolationForest_Label"] = iso_labels
+
+# 10. Early Warning Identification
+anomalies = agg_data[(clusters == -1) | (iso_labels == -1)]
+print("Potential failing engines:")
+print(anomalies)
+
+# 11. Interpretation
+# Higher vibration, temperature, or pressure sensors often dominate anomalies
+
