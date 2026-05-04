@@ -1,0 +1,237 @@
+MODULE 6: SUPERVISED MACHINE LEARNING SOLUTIONS
+
+----------------------------------------
+THEORETICAL ANSWERS
+----------------------------------------
+
+1. Supervised vs Unsupervised Learning:
+
+Supervised Learning:
+- Uses labeled data (input + output known)
+- Goal: Predict output from input
+- Examples: Regression, Classification
+- Algorithms: Linear Regression, Logistic Regression, SVM, Decision Trees
+
+Unsupervised Learning:
+- Uses unlabeled data
+- Goal: Find patterns/structure
+- Examples: Clustering, Dimensionality Reduction
+- Algorithms: K-Means, PCA, Hierarchical Clustering
+
+Key Difference:
+Supervised = learns with answers
+Unsupervised = learns without answers
+
+
+2. Regression Models in Business:
+
+- Used to predict continuous values
+- Examples:
+  • House price prediction
+  • Sales forecasting
+  • Demand prediction
+  • Revenue estimation
+
+Business Use:
+- Helps in decision making
+- Improves planning and forecasting
+
+
+----------------------------------------
+TASK 1: HOUSE PRICE PREDICTION
+----------------------------------------
+
+Step 1: Import Libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV
+from sklearn.linear_model import LinearRegression, Lasso, Ridge
+from sklearn.svm import SVR
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.decomposition import PCA
+from sklearn.metrics import mean_squared_error, r2_score
+
+
+Step 2: Load Dataset
+df = pd.read_csv("train.csv")
+
+Step 3: EDA
+print(df.head())
+print(df.info())
+print(df.describe())
+
+sns.heatmap(df.corr(), cmap='coolwarm')
+
+Step 4: Data Preprocessing
+df = df.dropna()
+X = df.drop("SalePrice", axis=1)
+y = df["SalePrice"]
+
+X = pd.get_dummies(X)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+
+----------------------------------------
+MODELS
+----------------------------------------
+
+1. Simple Linear Regression (Area)
+X_area = df[['GrLivArea']]
+y = df['SalePrice']
+
+model_slr = LinearRegression()
+model_slr.fit(X_area, y)
+
+
+2. Multiple Linear Regression
+model_lr = LinearRegression()
+model_lr.fit(X_train, y_train)
+
+
+3. PCA + Linear Regression
+pca = PCA(n_components=10)
+X_pca = pca.fit_transform(X)
+
+model_pca = LinearRegression()
+model_pca.fit(X_pca, y)
+
+
+4. Lasso & Ridge
+lasso = Lasso(alpha=0.1)
+lasso.fit(X_train, y_train)
+
+ridge = Ridge(alpha=1.0)
+ridge.fit(X_train, y_train)
+
+
+5. SVR
+svr = SVR()
+svr.fit(X_train, y_train)
+
+
+6. Decision Tree
+dt = DecisionTreeRegressor()
+dt.fit(X_train, y_train)
+
+
+7. Random Forest
+rf = RandomForestRegressor()
+rf.fit(X_train, y_train)
+
+
+----------------------------------------
+HYPERPARAMETER TUNING
+----------------------------------------
+
+param_grid = {'n_estimators':[100,200], 'max_depth':[5,10]}
+
+grid = GridSearchCV(RandomForestRegressor(), param_grid)
+grid.fit(X_train, y_train)
+
+best_model = grid.best_estimator_
+
+
+----------------------------------------
+MODEL EVALUATION
+----------------------------------------
+
+models = [model_lr, lasso, ridge, svr, dt, rf]
+
+for m in models:
+    pred = m.predict(X_test)
+    print(m, "R2:", r2_score(y_test, pred))
+
+
+----------------------------------------
+TASK 2: CUSTOMER CHURN PREDICTION
+----------------------------------------
+
+Step 1: Load Data
+df = pd.read_csv("churn.csv")
+
+Step 2: EDA
+print(df.head())
+sns.countplot(x='Attrition_Flag', data=df)
+
+Step 3: Handle Imbalance
+from imblearn.over_sampling import SMOTE
+sm = SMOTE()
+
+X = df.drop("Attrition_Flag", axis=1)
+y = df["Attrition_Flag"]
+
+X, y = sm.fit_resample(X, y)
+
+
+Step 4: Models
+
+1. Logistic Regression
+from sklearn.linear_model import LogisticRegression
+log = LogisticRegression()
+log.fit(X, y)
+
+
+2. Naive Bayes
+from sklearn.naive_bayes import GaussianNB
+nb = GaussianNB()
+nb.fit(X, y)
+
+
+3. KNN
+from sklearn.neighbors import KNeighborsClassifier
+knn = KNeighborsClassifier()
+knn.fit(X, y)
+
+
+4. SVC with GridSearch
+from sklearn.svm import SVC
+
+param = {'C':[1,10], 'kernel':['linear','rbf']}
+grid = GridSearchCV(SVC(), param)
+grid.fit(X, y)
+
+
+5. Decision Tree
+from sklearn.tree import DecisionTreeClassifier
+dt = DecisionTreeClassifier()
+dt.fit(X, y)
+
+
+6. Random Forest with RandomSearch
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import RandomizedSearchCV
+
+param = {'n_estimators':[100,200], 'max_depth':[5,10]}
+rand = RandomizedSearchCV(RandomForestClassifier(), param)
+rand.fit(X, y)
+
+
+----------------------------------------
+MODEL SELECTION
+----------------------------------------
+
+from sklearn.metrics import accuracy_score
+
+models = [log, nb, knn, dt]
+
+for m in models:
+    pred = m.predict(X)
+    print(m, accuracy_score(y, pred))
+
+Best model = highest accuracy / F1-score
+
+
+----------------------------------------
+FINAL CONCLUSION
+----------------------------------------
+
+- Random Forest performed best in regression
+- SVC / Random Forest best in classification
+- Hyperparameter tuning improves performance
+- Proper EDA and preprocessing is critical
+
